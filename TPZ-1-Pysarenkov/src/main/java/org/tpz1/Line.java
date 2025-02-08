@@ -1,0 +1,53 @@
+package org.tpz1;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.awt.geom.Point2D;
+
+@Getter
+@Setter
+public class Line {
+    private final double A;
+    private final double B;
+    private final double C;
+
+    private static final double delta = 10e-8;
+
+    private Line() {this.A = 0; this.B = 0; this.C = 0;}
+
+    private Line(double A, double B, double C){
+        this.A = A;
+        this.B = B;
+        this.C = C;
+    }
+
+    public static Line createLine(Point2D.Double a, Point2D.Double b) throws IllegalArgumentException {
+        // Привести до Ax + By + C = 0, A^2 + B^2 != 0
+        // 1) Якщо C=0, то пряма проходить через початок координат.
+        //2) Якщо A=0, то пряма паралельна осі абсцис Ox.
+        //3) Якщо B=0, то пряма паралельна осі ординат Oy
+        //4) Якщо A=C=0, то пряма співпадає з віссю Ox.
+        //5) Якщо B=C=0, то пряма співпадає з віссю Oy.
+        // (x - x1)/(x2-x1) = (y-y1)/(y2-y1)
+        if (Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) < delta) {
+            throw new IllegalArgumentException("Точки співпадають! Введіть такі точки, що не співпадають");
+        }
+        double A = b.y - a.y;
+        double B = a.x - b.x;
+        double C = a.y * b.x - b.y * a.x;
+        return new Line(A, B, C);
+    }
+
+    public static Line createLine(double x1, double y1, double x2, double y2) {
+        return createLine(new Point2D.Double(x1, y1), new Point2D.Double(x2, y2));
+    }
+
+    public static Line createLine(double k, double b) throws IllegalArgumentException {
+        // y = kx + b => kx - y - b = 0
+        if (b < delta) {
+            throw new IllegalArgumentException("b дорівнює нулю! Введіть b, що не дорівнює нулю");
+        }
+        return new Line(k,-1,-1 * b);
+    }
+}
