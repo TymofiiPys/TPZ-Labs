@@ -26,7 +26,7 @@ public class Intersection {
 
         List<IntersectionPoint> intersectionPoints = List.of(i12, i13, i23);
 
-        if(intersectionPoints.stream().allMatch(x -> x.type.equals("COINC"))) {
+        if(intersectionPoints.stream().allMatch(x -> x.type.equals("COINCIDE"))) {
             return "Прямі співпадають";
         }
         // Прямі або перетинаються в двох точках, або не перетинаються (три паралельні або дві співпадають)
@@ -81,10 +81,10 @@ public class Intersection {
 //            if ((A1 / A2 - B1 / B2 < delta) && (A1 / A2 - C1 / C2 < delta) && (B1 / B2 - C1 / C2 < delta)) {
                 if (Math.abs(k1 - k2) < delta) {
                     // Прямі співпадають
-                    return new IntersectionPoint("COINC", null);
+                    return new IntersectionPoint("COINCIDE", null);
                 } else {
                     // Прямі паралельні
-                    return new IntersectionPoint("PARAL", null);
+                    return new IntersectionPoint("PARALLEL", null);
                 }
             }
 

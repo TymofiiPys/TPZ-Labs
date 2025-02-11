@@ -1,27 +1,29 @@
 package org.tpz1;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class IntersectionTest extends TestCase {
+import java.awt.geom.Point2D;
 
-    public void testFindIntersection() {
-        // Класи еквівалентності:
-        // Прямі співпадають
-        // Не перетинаютьcя
-        // Прямі перетинаються в одній точці
-        // в двох
-        // в трьох
-        // Неприпустимі: якийсь параметр 0 або виходить за межі
-        //Case 1
-        //Case 2
-        //Case 3
-        //Case 4
-        //Case 5
-        //Case 6
+class IntersectionTest {
 
-        //Case 7
-        //Case 8
-        //Case 9
+    @Test
+    void findIntersectionNullCheck() {
+        Line lineNull = null;
+        Line lineNotNull1 = Line.createLine(0,0,1,1);
+        Line lineNotNull2 = Line.createLine(1,2);
 
+        assertThrows(IllegalArgumentException.class, () -> Intersection.findIntersection(lineNull, lineNotNull1, lineNotNull2));
+    }
+
+    @Test
+    void createFaultyLines() {
+        Line lineNull = null;
+        Line lineNotNull1 = Line.createLine(0,0,1,1);
+        Line lineNotNull2 = Line.createLine(1,2);
+
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(1,0));
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(null,null));
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(new Point2D.Double(0,0),new Point2D.Double(0,0)));
     }
 }
