@@ -17,6 +17,9 @@ public class Intersection {
 
         // Подання прямих - 2, 2, 5
         //
+        if(line1 == null || line2 == null || line3 == null) {
+            throw new IllegalArgumentException("Один із наданих параметрів є null");
+        }
         final IntersectionPoint i12 = IntersectionPoint.getIntersectionPoint(line1, line2);
         final IntersectionPoint i13 = IntersectionPoint.getIntersectionPoint(line1, line3);
         final IntersectionPoint i23 = IntersectionPoint.getIntersectionPoint(line2, line3);

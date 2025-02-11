@@ -30,6 +30,9 @@ public class Line {
         //4) Якщо A=C=0, то пряма співпадає з віссю Ox.
         //5) Якщо B=C=0, то пряма співпадає з віссю Oy.
         // (x - x1)/(x2-x1) = (y-y1)/(y2-y1)
+        if(a == null || b == null) {
+            throw new IllegalArgumentException("Один із наданих параметрів є null");
+        }
         if (Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) < delta) {
             throw new IllegalArgumentException("Точки співпадають! Введіть такі точки, що не співпадають");
         }
