@@ -77,11 +77,7 @@ public class Intersection {
             final double C2 = line2.getC();
 
             if (Math.abs(A1 * B2 - A2 * B1) < delta) {
-                double k1 = A2 != 0 ? A1 / A2 : B1 / B2;
-                double k2 = C2 != 0 ? C1 / C2 : k1;
-                // Наведені вище два рядки заміняють вираз нижче, один з коефіцієнтів може бути нульовим.
-//            if ((A1 / A2 - B1 / B2 < delta) && (A1 / A2 - C1 / C2 < delta) && (B1 / B2 - C1 / C2 < delta)) {
-                if (Math.abs(k1 - k2) < delta) {
+                if ((A1*B2 - B1*A2 < delta) && (A1*C2- C1*A2 < delta) && (B1*C2 - C1*B2 < delta)) {
                     // Прямі співпадають
                     return new IntersectionPoint("COINCIDE", null);
                 } else {
