@@ -48,9 +48,9 @@ public class Line {
 
     public static Line createLine(double k, double b) throws IllegalArgumentException {
         // y = kx + b => kx - y - b = 0
-        if (b < delta) {
+        if (Math.abs(b) < delta) {
             throw new IllegalArgumentException("b дорівнює нулю! Введіть b, що не дорівнює нулю");
         }
-        return new Line(k,-1,-1 * b);
+        return new Line(k,-1, b);
     }
 }

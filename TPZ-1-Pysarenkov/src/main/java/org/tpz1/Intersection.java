@@ -32,7 +32,7 @@ public class Intersection {
         // Прямі або перетинаються в двох точках, або не перетинаються (три паралельні або дві співпадають)
         if(intersectionPoints.stream().anyMatch(x -> x.type.equals("PARALLEL"))) {
             // Наприклад, прямі 1 і 2 паралельні. Пряма 3 або паралельна 1 і 2, або співпадає з одною з них
-            if (intersectionPoints.stream().filter(x -> x.type.equals("PARALLEL")).count() > 2) {
+            if (intersectionPoints.stream().filter(x -> x.type.equals("PARALLEL")).count() >= 2) {
                 return "Прямі не перетинаються";
             } else {
                 // Прямі 1 і 2 паралельні, пряма 3 їх перетинає
@@ -46,11 +46,13 @@ public class Intersection {
                         inters.get(1).x, inters.get(1).y);
             }
         }
-        if (intersectionPoints.stream().map(x -> x.point).distinct().count() == 1) {
+        List<Point2D.Double> ipNotNull = intersectionPoints.stream().map(x -> x.point).filter(x -> x != null).distinct().toList();
+        if (ipNotNull.size() == 1) {
+            Point2D.Double inters = ipNotNull.get(0);
             return String.format("Прямі перетинаються в одній точці: (%.3f, %.3f).",
-                    i12.point.x, i12.point.y);
+                    inters.x, inters.y);
         }
-        return String.format("Прямі перетинаються в трьох точках: (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f).",
+        return String.format("Прямі перетинаються у трьох точках: (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f).",
                 i12.point.x, i12.point.y,
                 i13.point.x, i13.point.y,
                 i23.point.x, i23.point.y);
@@ -74,7 +76,7 @@ public class Intersection {
             final double B2 = line2.getB();
             final double C2 = line2.getC();
 
-            if (A1 * B2 - A2 * B1 < delta) {
+            if (Math.abs(A1 * B2 - A2 * B1) < delta) {
                 double k1 = A2 != 0 ? A1 / A2 : B1 / B2;
                 double k2 = C2 != 0 ? C1 / C2 : k1;
                 // Наведені вище два рядки заміняють вираз нижче, один з коефіцієнтів може бути нульовим.
