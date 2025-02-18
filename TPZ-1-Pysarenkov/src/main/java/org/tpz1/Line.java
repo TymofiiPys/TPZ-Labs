@@ -8,6 +8,8 @@ import java.awt.geom.Point2D;
 @Getter
 @Setter
 public class Line {
+    private static final double rightBound = 120d;
+
     private final double A;
     private final double B;
     private final double C;
@@ -33,6 +35,12 @@ public class Line {
         if(a == null || b == null) {
             throw new IllegalArgumentException("Один із наданих параметрів є null");
         }
+        if (!checkBounds(a.x) || !checkBounds(a.y) || !checkBounds(b.x) || !checkBounds(b.y)) {
+            throw new IllegalArgumentException(String.format("Введені параметри знаходяться поза межами інтервалу [%.0f; %.0f]", -1 * rightBound, rightBound));
+        }
+        if (Math.abs(a.y - b.y) < delta) {
+            throw new IllegalArgumentException("Введіть такі y, що не співпадають");
+        }
         if (Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) < delta) {
             throw new IllegalArgumentException("Точки співпадають! Введіть такі точки, що не співпадають");
         }
@@ -48,9 +56,16 @@ public class Line {
 
     public static Line createLine(double k, double b) throws IllegalArgumentException {
         // y = kx + b => kx - y - b = 0
+        if (!checkBounds(k) || !checkBounds(b)) {
+            throw new IllegalArgumentException(String.format("Введені параметри знаходяться поза межами інтервалу [%.0f; %.0f]", -1 * rightBound, rightBound));
+        }
         if (Math.abs(b) < delta) {
             throw new IllegalArgumentException("b дорівнює нулю! Введіть b, що не дорівнює нулю");
         }
         return new Line(k,-1, b);
+    }
+
+    private static Boolean checkBounds(double x) {
+        return Math.abs(x) <= rightBound;
     }
 }

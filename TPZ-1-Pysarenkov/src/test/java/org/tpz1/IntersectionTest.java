@@ -20,33 +20,103 @@ class IntersectionTest {
 
     @Test
     void createFaultyLines() {
-        Line lineNull = null;
-        Line lineNotNull1 = Line.createLine(0,0,1,1);
-        Line lineNotNull2 = Line.createLine(1,2);
-
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(1,0));
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(null,null));
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(new Point2D.Double(0,0),new Point2D.Double(0,0)));
     }
 
     @Test
+    void outOfBoundsParameters() {
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(121,121));
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(121,121, -121, -121));
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(0,121, 0, 0));
+    }
+
+    @Test
     void linesCoincide() {
-        Line line1 = Line.createLine(1,0,5,4);
-        Line line2 = Line.createLine(1,0,5,4);
-        Line line3 = Line.createLine(1,-1);
+        // Ліва границя
+        Line line1 = Line.createLine(0, -120, -120, 0);
+        Line line2 = Line.createLine(0, -120, -120, 0);
+        Line line3 = Line.createLine(-1, -120);
+
+        assertEquals("Прямі співпадають", Intersection.findIntersection(line1, line2, line3));
+
+        // Права границя
+        line1 = Line.createLine(0, 120, 120, 0);
+        line2 = Line.createLine(0, 120, 120, 0);
+        line3 = Line.createLine(-1, 120);
+
+        assertEquals("Прямі співпадають", Intersection.findIntersection(line1, line2, line3));
+
+        //Середина
+        line1 = Line.createLine(1,0,5,4);
+        line2 = Line.createLine(1,0,5,4);
+        line3 = Line.createLine(1,-1);
+
+        assertEquals("Прямі співпадають", Intersection.findIntersection(line1, line2, line3));
+
+        // Перша - ліва, друга - середина, третя - права
+        line1 = Line.createLine(-120, -119, -119, -118);
+        line2 = Line.createLine(119, 120, 118, 119);
+        line3 = Line.createLine(1, 1);
+
+        assertEquals("Прямі співпадають", Intersection.findIntersection(line1, line2, line3));
+
+        // дві - ближчі до лівої, третя - середина
+        line1 = Line.createLine(-120, -119, -119, -118);
+        line2 = Line.createLine(-120, -119, -119, -118);
+        line3 = Line.createLine(1, 1);
+
+        assertEquals("Прямі співпадають", Intersection.findIntersection(line1, line2, line3));
+
+        // Дві - ближче до правої, третя - середина
+        line1 = Line.createLine(119, 120, 118, 119);
+        line2 = Line.createLine(119, 120, 118, 119);
+        line3 = Line.createLine(1, 1);
 
         assertEquals("Прямі співпадають", Intersection.findIntersection(line1, line2, line3));
     }
 
     @Test
     void linesParallel() {
-        Line line1 = Line.createLine(1,0,5,4);
-        Line line2 = Line.createLine(1,0,5,4);
-        Line line3 = Line.createLine(1,-2);
+        // Ліва границя
+        Line line1 = Line.createLine(-120, -120, -119, -119);
+        Line line2 = Line.createLine(-120, -119, -119, -118);
+        Line line3 = Line.createLine(1,-120);
 
         assertEquals("Прямі не перетинаються", Intersection.findIntersection(line1, line2, line3));
 
-        line1 = Line.createLine(1,1,5,5);
+        //Права границя
+
+        line1 = Line.createLine(120, 0, 119, -1);
+        line2 = Line.createLine(119, 120, 118, 119);
+        line3 = Line.createLine(1, 120);
+
+        assertEquals("Прямі не перетинаються", Intersection.findIntersection(line1, line2, line3));
+
+        //Середина
+        line1 = Line.createLine(1,0,5,4);
+        line2 = Line.createLine(1,0,5,4);
+        line3 = Line.createLine(1,-2);
+
+        // Перша - ліва, друга - середина, третя - права
+        line1 = Line.createLine(-120, -119, -119, -118);
+        line2 = Line.createLine(120, 120, 119, 119);
+        line3 = Line.createLine(1, 1);
+
+        assertEquals("Прямі не перетинаються", Intersection.findIntersection(line1, line2, line3));
+
+        // дві - ближчі до лівої, третя - середина
+        line1 = Line.createLine(-120, -119, -119, -118);
+        line2 = Line.createLine(-120, -120, -119, -119);
+        line3 = Line.createLine(1, -1);
+
+        assertEquals("Прямі не перетинаються", Intersection.findIntersection(line1, line2, line3));
+
+        // Дві - ближче до правої, третя - середина
+        line1 = Line.createLine(120, 119, 119, 118);
+        line2 = Line.createLine(120, 120, 119, 119);
+        line3 = Line.createLine(1, 1);
 
         assertEquals("Прямі не перетинаються", Intersection.findIntersection(line1, line2, line3));
     }
