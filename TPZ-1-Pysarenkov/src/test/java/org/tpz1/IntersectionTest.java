@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.geom.Point2D;
 import java.util.List;
-import java.util.stream.Stream;
 
 class IntersectionTest {
 
@@ -123,37 +122,138 @@ class IntersectionTest {
 
     @Test
     void linesIntersectSingle() {
-        Line line1 = Line.createLine(7,0,5,4);
-        Line line2 = Line.createLine(1,0,5,4);
-        Line line3 = Line.createLine(1,-1);
+        // Ліва границя
+        Line line1 = Line.createLine(-120,-120,-119,-119);
+        Line line2 = Line.createLine(-120,-120,-119,-118);
+        Line line3 = Line.createLine(0,-120);
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються в одній точці: "));
+
+        // Права границя
+        line1 = Line.createLine(120,120,119,119);
+        line2 = Line.createLine(120,120,119,118);
+        line3 = Line.createLine(0,120);
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються в одній точці: "));
+
+        //Середина
+        line1 = Line.createLine(7,0,5,4);
+        line2 = Line.createLine(1,0,5,4);
+        line3 = Line.createLine(1,-1);
 
         assertEquals("Прямі перетинаються в одній точці: (5.000, 4.000).", Intersection.findIntersection(line1, line2, line3));
+
+        // Перша - ліва, друга - середина, третя - права
+        line1 = Line.createLine(-119, -120, -118, -119);
+        line2 = Line.createLine(120, 120, 119, 118);
+        line3 = Line.createLine(1, -1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються в одній точці: "));
+
+        // дві - ближчі до лівої, третя - середина
+        line1 = Line.createLine(-119, -120, -118, -119);
+        line2 = Line.createLine(-120, -120, -119, -118);
+        line3 = Line.createLine(1, -1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються в одній точці: "));
+
+        // Дві - ближче до правої, третя - середина
+        line1 = Line.createLine(120, 119, 119, 118);
+        line2 = Line.createLine(120, 120, 119, 118);
+        line3 = Line.createLine(1, -1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються в одній точці: "));
     }
 
     @Test
     void linesIntersectDouble() {
-        Line line1 = Line.createLine(7,0,5,4);
-        Line line2 = Line.createLine(1,0,5,4);
-        Line line3 = Line.createLine(1,-2);
+        // середина
+        Line lineA = Line.createLine(7,0,5,4);
+        Line lineB = Line.createLine(1,0,5,4);
+        Line lineC = Line.createLine(1,-2);
 
-//        assertEquals("Прямі перетинаються у двох точках: (5.000, 4.000), (5.333, 3.333).", Intersection.findIntersection(line1, line2, line3));
         assertTrue(
                 List.of("Прямі перетинаються у двох точках:", "(5.000, 4.000)", "(5.333, 3.333)")
                 .stream()
-                .allMatch(x -> Intersection.findIntersection(line1, line2, line3).contains(x))
+                .allMatch(x -> Intersection.findIntersection(lineA, lineB, lineC).contains(x))
         );
+
+        // Ліва границя
+        Line line1 = Line.createLine(-120,-119,-119,-118);
+        Line line2 = Line.createLine(-120,-120,-119,-119);
+        Line line3 = Line.createLine(0,-120);
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у двох точках: "));
+
+        // права границя
+        line1 = Line.createLine(120,119,119,118);
+        line2 = Line.createLine(120,120,119,119);
+        line3 = Line.createLine(0,120);
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у двох точках: "));
+
+        // Перша - ліва, друга - середина, третя - права
+        line1 = Line.createLine(-120, -119, -119, -120);
+        line2 = Line.createLine(120, 120, 119, 119);
+        line3 = Line.createLine(1, 1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у двох точках: "));
+
+        // дві - ближчі до лівої, третя - середина
+        line1 = Line.createLine(-120, -119, -119, -120);
+        line2 = Line.createLine(-120, -120, -119, -119);
+        line3 = Line.createLine(1, 1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у двох точках: "));
+
+        // Дві - ближче до правої, третя - середина
+        line1 = Line.createLine(120, 119, 119, 120);
+        line2 = Line.createLine(120, 120, 119, 119);
+        line3 = Line.createLine(1, 1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у двох точках: "));
     }
 
     @Test
     void linesIntersectTriple() {
-        Line line1 = Line.createLine(7,0,5,4);
-        Line line2 = Line.createLine(1,0,5,4);
-        Line line3 = Line.createLine(-1,4);
+        //Середина
+        Line lineA = Line.createLine(7,0,5,4);
+        Line lineB = Line.createLine(1,0,5,4);
+        Line lineC = Line.createLine(-1,4);
 
         assertTrue(
                 List.of("Прямі перетинаються у трьох точках:", "(5.000, 4.000)", "(10.000, -6.000)", "(2.500, 1.500)")
                 .stream()
-                .allMatch(x -> Intersection.findIntersection(line1, line2, line3).contains(x))
+                .allMatch(x -> Intersection.findIntersection(lineA, lineB, lineC).contains(x))
         );
+
+        // Ліва границя
+        Line line1 = Line.createLine(-120,-119,-119,-120);
+        Line line2 = Line.createLine(-120,-120,-119,-119);
+        Line line3 = Line.createLine(-120,-120);
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у трьох точках: "));
+
+        // права границя
+        line1 = Line.createLine(120,119,119,120);
+        line2 = Line.createLine(120,120,119,119);
+        line3 = Line.createLine(120,120);
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у трьох точках: "));
+
+        // Перша - ліва, друга - середина, третя - права
+        line1 = Line.createLine(-120,-119,-119,-120);
+        line2 = Line.createLine(120, 120, 119, 119);
+        line3 = Line.createLine(2, 1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у трьох точках: "));
+
+        // дві - ближчі до лівої, третя - середина
+        line1 = Line.createLine(-120, -119, -119, -120);
+        line2 = Line.createLine(-120, -120, -119, -119);
+        line3 = Line.createLine(2, 1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у трьох точках: "));
+
+        // Дві - ближче до правої, третя - середина
+        line1 = Line.createLine(120, 119, 119, 120);
+        line2 = Line.createLine(120, 120, 119, 119);
+        line3 = Line.createLine(2, 1);
+
+        assertTrue(Intersection.findIntersection(line1, line2, line3).startsWith("Прямі перетинаються у трьох точках: "));
     }
 }

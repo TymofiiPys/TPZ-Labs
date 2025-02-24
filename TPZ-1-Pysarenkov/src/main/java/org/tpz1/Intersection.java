@@ -77,7 +77,7 @@ public class Intersection {
             final double C2 = line2.getC();
 
             if (Math.abs(A1 * B2 - A2 * B1) < delta) {
-                if ((A1*B2 - B1*A2 < delta) && (A1*C2- C1*A2 < delta) && (B1*C2 - C1*B2 < delta)) {
+                if (Math.abs(A1*C2- C1*A2) < delta && Math.abs(B1*C2 - C1*B2) < delta) {
                     // Прямі співпадають
                     return new IntersectionPoint("COINCIDE", null);
                 } else {
