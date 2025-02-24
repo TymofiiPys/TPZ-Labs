@@ -21,7 +21,16 @@ class IntersectionTest {
     void createFaultyLines() {
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(1,0));
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(null,null));
+
+        // Ліва границя
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(new Point2D.Double(-120,-120),new Point2D.Double(-120,-120)));
+
+        // Права границя
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(new Point2D.Double(120,120),new Point2D.Double(120,120)));
+
+        // Середина
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(new Point2D.Double(0,0),new Point2D.Double(0,0)));
+
     }
 
     @Test
@@ -29,6 +38,12 @@ class IntersectionTest {
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(121,121));
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(121,121, -121, -121));
         assertThrows(IllegalArgumentException.class, () -> Line.createLine(0,121, 0, 0));
+
+        // Ліва границя
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(new Point2D.Double(-121,-121),new Point2D.Double(-121,-122)));
+
+        // Права границя
+        assertThrows(IllegalArgumentException.class, () -> Line.createLine(new Point2D.Double(121,121),new Point2D.Double(121,122)));
     }
 
     @Test
