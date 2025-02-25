@@ -3,7 +3,6 @@ package org.tpz1;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Intersection {
     private static final double delta = 1e-8;
