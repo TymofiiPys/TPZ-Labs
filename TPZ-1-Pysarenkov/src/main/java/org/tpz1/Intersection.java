@@ -2,22 +2,14 @@ package org.tpz1;
 
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Intersection {
     private static final double delta = 1e-8;
 
     public static String findIntersection(Line line1, Line line2, Line line3) {
-        // Outputs:
-        // Прямі співпадають
-        // «Прямі не перетинаються»;
-        // «Прямі перетинаються в одній точці (x0, y0), x0= ..., y0= ...»;
-        //«Прямі перетинаються в двох точках ці (x1, y1), (x2, y2), xi= ..., yi= ..., i=1,2»;
-        // «Прямі перетинаються в трьох точках (x1, y1), (x2, y2), (x3, y3), xi= ..., yi= ..., i=1,2,3»,;
-
-        // Подання прямих - 2, 2, 5
-        //
-        if(line1 == null || line2 == null || line3 == null) {
+        if (line1 == null || line2 == null || line3 == null) {
             throw new IllegalArgumentException("Один із наданих параметрів є null");
         }
         final IntersectionPoint i12 = IntersectionPoint.getIntersectionPoint(line1, line2);
@@ -26,11 +18,11 @@ public class Intersection {
 
         List<IntersectionPoint> intersectionPoints = List.of(i12, i13, i23);
 
-        if(intersectionPoints.stream().allMatch(x -> x.type.equals("COINCIDE"))) {
+        if (intersectionPoints.stream().allMatch(x -> x.type.equals("COINCIDE"))) {
             return "Прямі співпадають";
         }
         // Прямі або перетинаються в двох точках, або не перетинаються (три паралельні або дві співпадають)
-        if(intersectionPoints.stream().anyMatch(x -> x.type.equals("PARALLEL"))) {
+        if (intersectionPoints.stream().anyMatch(x -> x.type.equals("PARALLEL"))) {
             // Наприклад, прямі 1 і 2 паралельні. Пряма 3 або паралельна 1 і 2, або співпадає з одною з них
             if (intersectionPoints.stream().filter(x -> x.type.equals("PARALLEL")).count() >= 2) {
                 return "Прямі не перетинаються";
@@ -39,14 +31,14 @@ public class Intersection {
                 List<Point2D.Double> inters = intersectionPoints.stream().
                         filter(x -> !x.type.equals("PARALLEL")).
                         map(x -> x.point).
-                        collect(Collectors.toList());
+                        toList();
 
                 return String.format("Прямі перетинаються у двох точках: (%.3f, %.3f), (%.3f, %.3f).",
                         inters.get(0).x, inters.get(0).y,
                         inters.get(1).x, inters.get(1).y);
             }
         }
-        List<Point2D.Double> ipNotNull = intersectionPoints.stream().map(x -> x.point).filter(x -> x != null).distinct().toList();
+        List<Point2D.Double> ipNotNull = intersectionPoints.stream().map(x -> x.point).filter(Objects::nonNull).distinct().toList();
         if (ipNotNull.size() == 1) {
             Point2D.Double inters = ipNotNull.get(0);
             return String.format("Прямі перетинаються в одній точці: (%.3f, %.3f).",
@@ -77,7 +69,7 @@ public class Intersection {
             final double C2 = line2.getC();
 
             if (Math.abs(A1 * B2 - A2 * B1) < delta) {
-                if (Math.abs(A1*C2- C1*A2) < delta && Math.abs(B1*C2 - C1*B2) < delta) {
+                if (Math.abs(A1 * C2 - C1 * A2) < delta && Math.abs(B1 * C2 - C1 * B2) < delta) {
                     // Прямі співпадають
                     return new IntersectionPoint("COINCIDE", null);
                 } else {
@@ -94,11 +86,13 @@ public class Intersection {
             if (B1 == 0) {  // First line is vertical
                 double x = -C1 / A1;
                 double y = -(A2 * x + C2) / B2;
-                return new IntersectionPoint("", new Point2D.Double(x, y));            }
+                return new IntersectionPoint("", new Point2D.Double(x, y));
+            }
             if (A2 == 0) {  // Second line is horizontal
                 double y = -C2 / B2;
                 double x = -(B1 * y + C1) / A1;
-                return new IntersectionPoint("", new Point2D.Double(x, y));            }
+                return new IntersectionPoint("", new Point2D.Double(x, y));
+            }
             if (B2 == 0) {  // Second line is vertical
                 double x = -C2 / A2;
                 double y = -(A1 * x + C1) / B1;

@@ -16,27 +16,28 @@ public class Line {
 
     private static final double delta = 10e-8;
 
-    private Line() {this.A = 0; this.B = 0; this.C = 0;}
+    private Line() {
+        this.A = 0;
+        this.B = 0;
+        this.C = 0;
+    }
 
-    private Line(double A, double B, double C){
+    private Line(double A, double B, double C) {
         this.A = A;
         this.B = B;
         this.C = C;
     }
 
     public static Line createLine(Point2D.Double a, Point2D.Double b) throws IllegalArgumentException {
-        // Привести до Ax + By + C = 0, A^2 + B^2 != 0
-        // 1) Якщо C=0, то пряма проходить через початок координат.
-        //2) Якщо A=0, то пряма паралельна осі абсцис Ox.
-        //3) Якщо B=0, то пряма паралельна осі ординат Oy
-        //4) Якщо A=C=0, то пряма співпадає з віссю Ox.
-        //5) Якщо B=C=0, то пряма співпадає з віссю Oy.
         // (x - x1)/(x2-x1) = (y-y1)/(y2-y1)
-        if(a == null || b == null) {
+        if (a == null || b == null) {
             throw new IllegalArgumentException("Один із наданих параметрів є null");
         }
         if (!checkBounds(a.x) || !checkBounds(a.y) || !checkBounds(b.x) || !checkBounds(b.y)) {
             throw new IllegalArgumentException(String.format("Введені параметри знаходяться поза межами інтервалу [%.0f; %.0f]", -1 * rightBound, rightBound));
+        }
+        if (Math.abs(a.x - b.x) < delta) {
+            throw new IllegalArgumentException("Введіть такі x, що не співпадають");
         }
         if (Math.abs(a.y - b.y) < delta) {
             throw new IllegalArgumentException("Введіть такі y, що не співпадають");
@@ -55,17 +56,17 @@ public class Line {
     }
 
     public static Line createLine(double k, double b) throws IllegalArgumentException {
-        // y = kx + b => kx - y - b = 0
+        // y = kx + b, b != 0 => kx - y - b = 0
         if (!checkBounds(k) || !checkBounds(b)) {
             throw new IllegalArgumentException(String.format("Введені параметри знаходяться поза межами інтервалу [%.0f; %.0f]", -1 * rightBound, rightBound));
         }
         if (Math.abs(b) < delta) {
             throw new IllegalArgumentException("b дорівнює нулю! Введіть b, що не дорівнює нулю");
         }
-        return new Line(k,-1, b);
+        return new Line(k, -1, b);
     }
 
-    private static Boolean checkBounds(double x) {
-        return Math.abs(x) <= rightBound;
+    private static Boolean checkBounds(double a) {
+        return Math.abs(a) <= rightBound;
     }
 }
